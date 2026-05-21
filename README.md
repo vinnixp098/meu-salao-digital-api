@@ -1,6 +1,6 @@
-# ✨ Lumie API - Plataforma de Gestão para Salões
+# ✨ Lumien API - Plataforma de Gestão para Salões
 
-O **Lumie** é uma plataforma SaaS desenvolvida para modernizar a gestão de salões de beleza, substituindo processos manuais por uma solução digital completa, organizada e escalável.
+O **Lumien** é uma plataforma SaaS desenvolvida para modernizar a gestão de salões de beleza, substituindo processos manuais por uma solução digital completa, organizada e escalável.
 
 A API REST do projeto é responsável pelo gerenciamento de:
 
