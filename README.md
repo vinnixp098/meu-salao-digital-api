@@ -1,52 +1,126 @@
-# 📋 Cadastro de Usuários - API REST
+# ✨ Lumie API - Plataforma de Gestão para Salões
 
-Este projeto tem como finalidade a criação de uma API REST simples para gerenciamento de usuários.  
-A API permite **criar**, **listar**, **atualizar** e **deletar** registros de usuários.
+O **Lumie** é uma plataforma SaaS desenvolvida para modernizar a gestão de salões de beleza, substituindo processos manuais por uma solução digital completa, organizada e escalável.
+
+A API REST do projeto é responsável pelo gerenciamento de:
+
+- 👥 Clientes
+- 📅 Atendimentos
+- ✂️ Serviços
+- 💇 Profissionais
+- 📊 Relatórios
+- 🏢 Empresas
+- 🔐 Autenticação e controle de acesso
+
+O objetivo do Lumie é ajudar salões a terem mais controle operacional, produtividade e organização no dia a dia.
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+# 🚀 Tecnologias Utilizadas
 
 - ☕ **Java 24**
 - 🌱 **Spring Boot 3.5**
 - 📦 **Maven**
 - 🗃️ **Spring Data JPA**
-- 💾 **H2 Database (em memória)**
+- 🐘 **PostgreSQL**
+- 🔐 **Spring Security + JWT**
 - 🔧 **Spring Web**
 - ✍️ **Lombok**
+- 📬 **Java Mail Sender**
+- 🧪 **Bean Validation**
 
 ---
 
-## 📂 Estrutura do Projeto
+# 🧱 Arquitetura do Projeto
 
-O projeto segue uma arquitetura simples com os pacotes organizados em:
+O projeto segue uma arquitetura organizada em camadas para facilitar manutenção e escalabilidade.
 
-- `controller`: Responsável por expor os endpoints da API.
-- `model`: Entidade `Usuario`.
-- `repository`: Interface JPA para comunicação com o banco.
-- `service` (opcional): Regras de negócio (se aplicável).
+## 📂 Estrutura de pacotes
+
+- `controller`
+  Responsável por expor os endpoints da API REST.
+
+- `service`
+  Contém as regras de negócio da aplicação.
+
+- `repository`
+  Interfaces JPA responsáveis pela comunicação com o banco de dados.
+
+- `model`
+  Entidades do sistema.
+
+- `dto`
+  Objetos de transferência de dados.
+
+- `config`
+  Configurações gerais da aplicação.
+
+- `security`
+  Configurações de autenticação e autorização JWT.
+
+- `exception`
+  Tratamento global de exceções.
 
 ---
 
-## 💻 Acesso ao Console do H2
+# ✨ Principais Funcionalidades
 
-A aplicação utiliza o **H2 Database** em memória. Para acessar a interface web do banco e visualizar os dados:
+## 👥 Gestão de Clientes
+- Cadastro de clientes
+- Histórico de atendimentos
+- Controle de informações
 
-🔗 Acesse:  
-[http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+## 📅 Gestão de Atendimentos
+- Criação de atendimentos
+- Agendamento de horários
+- Controle de status
+- Registro de serviços realizados
 
-🛠️ Configure a conexão com os seguintes dados:
+## ✂️ Gestão de Serviços
+- Cadastro de serviços
+- Controle de valores
+- Associação de serviços aos atendimentos
 
-- **JDBC URL**: `jdbc:h2:mem:usuario`
-- **User Name**: `sa`
-- **Password**: *(em branco)*
+## 💇 Gestão de Profissionais
+- Controle de usuários
+- Permissões de acesso
+- Organização da equipe
+
+## 📊 Relatórios
+- Relatórios financeiros
+- Histórico de atendimentos
+- Controle operacional
+
+## 🔐 Autenticação
+- Login com JWT
+- Recuperação por código via e-mail
+- Controle de sessões
 
 ---
 
-## ▶️ Como executar o projeto
+# 🏢 Modelo SaaS
 
-1. **Clone o repositório:**
+O Lumie foi desenvolvido utilizando arquitetura multiempresa (multi-tenant), permitindo que múltiplos salões utilizem a plataforma de forma isolada e segura.
 
-   ```bash
-   git clone https://github.com/vinnixp098/cadastro-usuario.git
-   cd cadastro-usuario
+Cada salão possui:
+- seus próprios clientes;
+- seus atendimentos;
+- seus profissionais;
+- seus relatórios;
+- suas configurações.
+
+---
+
+# 💻 Configuração do Banco de Dados
+
+A aplicação utiliza PostgreSQL.
+
+## Exemplo de configuração:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/lumie
+spring.datasource.username=postgres
+spring.datasource.password=123456
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
