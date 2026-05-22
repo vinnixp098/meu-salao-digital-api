@@ -6,5 +6,5 @@ import lombok.Data;
 public class PasswordCodeValidationDTO {
     private String email;
     private String codigo;
-    private String novaSenha;
+//    private String novaSenha;
 }

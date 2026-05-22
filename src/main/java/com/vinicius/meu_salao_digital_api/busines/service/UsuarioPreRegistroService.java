@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioPreRegistroService {
@@ -17,19 +20,21 @@ public class UsuarioPreRegistroService {
 
     public ResponseEntity<?> salvarUsuario(@Valid UsuarioPreRegistroCadastroDTO usuarioPreRegistro){
 
-        if(!usuarioPreRegistroRepository.findByEmail(usuarioPreRegistro.getEmail()).isEmpty()){
+        List<UsuarioPreRegistro> usuario = usuarioPreRegistroRepository.findAllByEmail(usuarioPreRegistro.getEmail());
+
+        if(!usuario.isEmpty()){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já cadastrado!");
         }
 
-        UsuarioPreRegistro usuario = UsuarioPreRegistro.builder()
+        UsuarioPreRegistro usuarioData = UsuarioPreRegistro.builder()
                 .nome(usuarioPreRegistro.getNome())
                 .email(usuarioPreRegistro.getEmail())
-                .enterpriseId(usuarioPreRegistro.getEnterpriseId())
-                .functionEnterprise(usuarioPreRegistro.getFunctionEnterprise())
+                .enterpriseId(usuarioPreRegistro.getEnterprise_id())
+                .functionEnterprise(usuarioPreRegistro.getFunction_enterprise())
                 .deleted(false)
                 .build();
 
-        usuarioPreRegistroRepository.save(usuario);
+        usuarioPreRegistroRepository.save(usuarioData);
 
         return ResponseEntity.ok("Usuario pré-cadastrado com sucesso!");
     }
@@ -39,7 +44,17 @@ public class UsuarioPreRegistroService {
         if(email == null){
             return ResponseEntity.ok(usuarioPreRegistroRepository.findAllByDeleted(false));
         }
-        return ResponseEntity.ok(usuarioPreRegistroRepository.findAllByEmail(email));
+
+        Optional <UsuarioPreRegistro> usuario = usuarioPreRegistroRepository.findByEmailAndDeleted(email, false);
+
+        if(usuario.isPresent()){
+            return ResponseEntity.ok(usuario.get());
+        }
+
+       List <UsuarioPreRegistro> usuarios = usuarioPreRegistroRepository.findAll();
+
+        return ResponseEntity.ok(usuarios);
+
     }
 
     public ResponseEntity<?> deletar(@Valid Integer id) {

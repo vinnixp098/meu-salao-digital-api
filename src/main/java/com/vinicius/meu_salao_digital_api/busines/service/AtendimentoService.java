@@ -25,8 +25,13 @@ public class AtendimentoService {
             return ResponseEntity.badRequest().body("Empresa não encontrada!");
         }
 
-        if(atendimentoRepository.findAllByEmpresaIdAndClienteAndStatus(atendimento.getEmpresaId(), atendimento.getCliente(), StatusAtendimento.EM_ANDAMENTO).size() > 0){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("O cliente já possui um atendimento em andamento!");
+        if(atendimentoRepository.buscarAtendimentoEmAndamento(
+                atendimento.getEmpresaId(),
+                atendimento.getCliente(),
+                StatusAtendimento.EM_ANDAMENTO
+        ).size() > 0){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("O cliente já possui um atendimento em andamento!");
         }
 
         Atendimento atendimentoData = Atendimento.builder()
@@ -50,10 +55,23 @@ public class AtendimentoService {
     ){
 
         if(status == null){
-            return ResponseEntity.ok(atendimentoRepository.findAllByEmpresaIdBetWeenDates(empresa, dataInicio, dataFim));
+            return ResponseEntity.ok(
+                    atendimentoRepository.buscarTodosPorPeriodo(
+                            empresa,
+                            dataInicio,
+                            dataFim
+                    )
+            );
         }
 
-        return ResponseEntity.ok(atendimentoRepository.findAllByEmpresaIdAndStatusBetWeenDates(empresa, status, dataInicio, dataFim));
+        return ResponseEntity.ok(
+                atendimentoRepository.buscarTodosPorStatusEPeriodo(
+                        empresa,
+                        status,
+                        dataInicio,
+                        dataFim
+                )
+        );
     }
 
     public ResponseEntity<?> alterarStatusAtivo(Integer id, StatusAtendimento status){

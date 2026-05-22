@@ -28,6 +28,8 @@ public class Atendimento {
 
     private LocalDateTime data_agendamento;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatusAtendimento status;
 
     private BigDecimal valor_total;

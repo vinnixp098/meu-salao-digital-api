@@ -32,8 +32,6 @@ public class UsuarioPreRegistro {
 
     public Boolean deleted;
 
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+
 
 }

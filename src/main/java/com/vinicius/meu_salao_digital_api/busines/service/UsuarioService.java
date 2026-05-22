@@ -7,8 +7,10 @@ import com.vinicius.meu_salao_digital_api.busines.dto.UsuarioDTO;
 import com.vinicius.meu_salao_digital_api.busines.entitys.Empresa;
 import com.vinicius.meu_salao_digital_api.busines.entitys.PasswordResetToken;
 import com.vinicius.meu_salao_digital_api.busines.entitys.Usuario;
+import com.vinicius.meu_salao_digital_api.busines.entitys.UsuarioPreRegistro;
 import com.vinicius.meu_salao_digital_api.busines.repository.EmpresaRepository;
 import com.vinicius.meu_salao_digital_api.busines.repository.PasswordResetTokenRepository;
+import com.vinicius.meu_salao_digital_api.busines.repository.UsuarioPreRegistroRepository;
 import com.vinicius.meu_salao_digital_api.busines.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -62,7 +64,7 @@ public class UsuarioService {
         Usuario usuario = usuarioOpt.get();
         Optional<Empresa> dadosEmpresa = empresaRepository.findById(usuario.getEmpresaId());
 
-        if(dadosEmpresa.isEmpty() || dadosEmpresa.get().getDeleted()){
+        if (dadosEmpresa.isEmpty() || dadosEmpresa.get().getDeleted()) {
             return ResponseEntity.status(403).body("Acesso bloqueado! Entre em contato com o suporte.");
         }
 
@@ -152,7 +154,7 @@ public class UsuarioService {
     }
 
 
-    public ResponseEntity<?> validarCodigoRecuperacao(String email, String codigo, String novaSenha) {
+    public ResponseEntity<?> validarCodigoRecuperacao(String email, String codigo) {
         PasswordResetToken token = tokenRepository.findByEmailAndToken(email, codigo)
                 .orElse(null);
 
@@ -165,18 +167,10 @@ public class UsuarioService {
             return ResponseEntity.status(400).body("Código expirado!");
         }
 
-        Usuario usuario = repository.findByEmail(email)
-                .orElse(null);
-        if (usuario == null) {
-            return ResponseEntity.status(404).body("Usuário não encontrado!");
-        }
-
-        usuario.setSenha(passwordEncoder.encode(novaSenha));
-        repository.save(usuario);
-
-        // Remove token após uso
-        tokenRepository.delete(token);
-
         return ResponseEntity.ok("Código validado com sucesso!");
+
+
+
     }
 }
+

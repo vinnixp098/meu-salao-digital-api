@@ -45,13 +45,13 @@ public class UsuarioController {
         return usuarioService.atualizarUsuarioPorEmail(email, usuario);
     }
 
-    @PostMapping("/recuperar-senha")
+    @PostMapping("/enviar-codigo")
     public ResponseEntity<?> enviarCodigo(@RequestBody PasswordRecoveryRequestDTO dto) {
         return usuarioService.enviarCodigoRecuperacao(dto.getEmail());
     }
 
     @PostMapping("/validar-codigo")
     public ResponseEntity<?> validarCodigo(@RequestBody PasswordCodeValidationDTO dto) {
-        return usuarioService.validarCodigoRecuperacao(dto.getEmail(), dto.getCodigo(), dto.getNovaSenha());
+        return usuarioService.validarCodigoRecuperacao(dto.getEmail(), dto.getCodigo());
     }
 }
