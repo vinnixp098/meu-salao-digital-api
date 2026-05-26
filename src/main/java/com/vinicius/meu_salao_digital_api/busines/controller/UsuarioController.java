@@ -18,7 +18,6 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-
     @PostMapping("/cadastrar")
     public ResponseEntity<?> salvarUsuario(@Valid @RequestBody UsuarioCadastroDTO usuario) {
         return usuarioService.salvarUsuario(usuario);
@@ -30,8 +29,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/buscar-todos")
-    public ResponseEntity<?> buscarTodos(){
-        return ResponseEntity.ok(usuarioService.buscarAtivos());
+    public ResponseEntity<?> buscarTodos(Integer empresaId){
+        return usuarioService.buscarAtivos(empresaId);
     }
 
     @DeleteMapping("/deletar")

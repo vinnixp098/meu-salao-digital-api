@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AtendimentoRepository extends JpaRepository<Atendimento, Integer> {
@@ -17,6 +17,7 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Intege
         WHERE a.empresaId = :empresaId
         AND a.cliente = :cliente
         AND a.status = :status
+        AND (a.deletado IS NULL OR a.deletado = false)
     """)
     List<Atendimento> buscarAtendimentoEmAndamento(
             @Param("empresaId") Integer empresaId,
@@ -28,13 +29,15 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Intege
         SELECT a
         FROM Atendimento a
         WHERE a.empresaId = :empresaId
-        AND DATE(a.data_agendamento) BETWEEN :dataInicio AND :dataFim
-        ORDER BY a.data_agendamento DESC
+        AND a.dataCriacao >= :dataInicio
+        AND a.dataCriacao < :dataFim
+        AND (a.deletado IS NULL OR a.deletado = false)
+        ORDER BY a.dataCriacao DESC
     """)
     List<Atendimento> buscarTodosPorPeriodo(
             @Param("empresaId") Integer empresaId,
-            @Param("dataInicio") LocalDate dataInicio,
-            @Param("dataFim") LocalDate dataFim
+            @Param("dataInicio") LocalDateTime dataInicio,
+            @Param("dataFim") LocalDateTime dataFim
     );
 
     @Query("""
@@ -42,13 +45,58 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Intege
         FROM Atendimento a
         WHERE a.empresaId = :empresaId
         AND a.status = :status
-        AND DATE(a.data_agendamento) BETWEEN :dataInicio AND :dataFim
-        ORDER BY a.data_agendamento DESC
+        AND a.dataCriacao >= :dataInicio
+        AND a.dataCriacao < :dataFim
+        AND (a.deletado IS NULL OR a.deletado = false)
+        ORDER BY a.dataCriacao DESC
     """)
     List<Atendimento> buscarTodosPorStatusEPeriodo(
             @Param("empresaId") Integer empresaId,
             @Param("status") StatusAtendimento status,
-            @Param("dataInicio") LocalDate dataInicio,
-            @Param("dataFim") LocalDate dataFim
+            @Param("dataInicio") LocalDateTime dataInicio,
+            @Param("dataFim") LocalDateTime dataFim
     );
+
+    @Query("""
+        SELECT a
+        FROM Atendimento a
+        WHERE a.empresaId = :empresaId
+        AND a.status = :status
+        AND (a.deletado IS NULL OR a.deletado = false)
+        ORDER BY a.dataCriacao DESC
+    """)
+    List<Atendimento> buscarTodosPorEmpresaEStatus(
+            @Param("empresaId") Integer empresaId,
+            @Param("status") StatusAtendimento status
+    );
+
+    @Query("""
+        SELECT a
+        FROM Atendimento a
+        WHERE a.empresaId = :empresaId
+        AND (a.deletado IS NULL OR a.deletado = false)
+        ORDER BY a.dataCriacao DESC
+    """)
+    List<Atendimento> buscarTodosPorEmpresa(
+            @Param("empresaId") Integer empresaId
+    );
+
+    @Query("""
+        SELECT a
+        FROM Atendimento a
+        WHERE a.empresaId = :empresaId
+        AND (a.deletado IS NULL OR a.deletado = false)
+        AND a.status NOT IN ('CANCELADO', 'AGENDADO')
+        AND a.dataCriacao >= :dataInicio
+        AND a.dataCriacao < :dataFim
+        ORDER BY a.dataCriacao DESC
+    """)
+    List<Atendimento> buscarAtendimentos(
+            @Param("empresaId") Integer empresaId,
+            @Param("dataInicio") LocalDateTime dataInicio,
+            @Param("dataFim") LocalDateTime dataFim
+    );
+
+
+
 }

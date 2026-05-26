@@ -26,13 +26,19 @@ public class Atendimento {
     @Column(name = "empresa_id")
     private Integer empresaId;
 
-    private LocalDateTime data_agendamento;
+    @Column(name = "data_agendamento")
+    private LocalDateTime dataAgendamento;
+
+    @CreationTimestamp
+    @Column(name = "data_criacao")
+    private LocalDateTime dataCriacao;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusAtendimento status;
 
-    private BigDecimal valor_total;
+    @Column(name = "valor_total")
+    private BigDecimal valorTotal;
 
     private Boolean deletado;
 }

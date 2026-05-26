@@ -86,16 +86,27 @@ public class UsuarioService {
         );
     }
 
-    public List<UsuarioDTO> buscarAtivos() {
-        return repository.findAllByAtivo(true)
+    public ResponseEntity<?> buscarAtivos(Integer empresaId) {
+
+        if(empresaId != null){
+            List<UsuarioDTO> usuarios = repository.findAllByAtivoAndEmpresaId(true, empresaId);
+            return ResponseEntity.ok().body(usuarios);
+        }
+
+        List<UsuarioDTO> usuarios = repository.findAllByAtivo(true)
                 .stream()
                 .map(u -> UsuarioDTO.builder()
+                        .id(u.getId())
                         .nome(u.getNome())
                         .email(u.getEmail())
                         .perfil(u.getPerfil())
                         .empresaId(u.getEmpresaId())
                         .build())
                 .toList();
+
+        return ResponseEntity.ok().body(usuarios);
+
+
     }
 
     public void deletarPorEmail(String email) {

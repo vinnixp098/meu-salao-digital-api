@@ -28,11 +28,19 @@ public class AtendimentoController {
     @GetMapping("/buscar")
     public ResponseEntity<?> buscar(
             @Valid @RequestParam Integer empresaId,
-            @Valid @RequestParam StatusAtendimento status,
-            LocalDate dataInicio,
-            LocalDate dataFim
+            StatusAtendimento status,
+            String dataInicio,
+            String dataFim
     ){
         return atendimentoService.buscarTodos(empresaId, status, dataInicio, dataFim);
+    }
+
+    @GetMapping("/buscar-totalizador")
+    public ResponseEntity<?> buscar(
+            @Valid @RequestParam Integer empresaId,
+            @Valid @RequestParam TipoFiltroTempo tipoTempo
+    ){
+        return atendimentoService.buscarTotalizador(empresaId, tipoTempo);
     }
 
     @PutMapping("/alterar-status")

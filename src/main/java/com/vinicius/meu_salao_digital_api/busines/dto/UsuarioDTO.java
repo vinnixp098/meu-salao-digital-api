@@ -14,6 +14,8 @@ import lombok.Setter;
 @Builder
 public class UsuarioDTO {
 
+    private Integer id;
+
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
