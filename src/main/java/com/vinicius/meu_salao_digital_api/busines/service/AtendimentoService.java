@@ -47,8 +47,9 @@ public class AtendimentoService {
                 .dataAgendamento(atendimento.getData_agendamento())
                 .build();
 
-        atendimentoRepository.save(atendimentoData);
-        return ResponseEntity.ok("Atendimento cadastrado com sucesso!");
+        Atendimento salvo = atendimentoRepository.save(atendimentoData);
+
+        return ResponseEntity.ok(salvo.getId());
 
     }
 
