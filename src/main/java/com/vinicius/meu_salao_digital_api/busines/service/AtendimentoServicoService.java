@@ -50,8 +50,9 @@ public class AtendimentoServicoService {
                 .deletado(false)
                 .build();
 
-        atendimentoServicoRepository.save(atendimentoData);
-        return ResponseEntity.ok("Serviço atribuído ao atendimento com sucesso!");
+        AtendimentoServico salvo = atendimentoServicoRepository.save(atendimentoData);
+
+        return ResponseEntity.ok(salvo.getId());
 
     }
 
