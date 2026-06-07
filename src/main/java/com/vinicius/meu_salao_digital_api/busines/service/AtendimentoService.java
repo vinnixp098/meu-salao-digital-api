@@ -109,23 +109,43 @@ public class AtendimentoService {
         LocalDateTime fim = LocalDate.parse(dataFim).atTime(23, 59, 59); // 23:59:59
 
         if(dataInicio != null && dataFim != null && status == null){
-            return ResponseEntity.ok(
-                    atendimentoRepository.buscarTodosPorPeriodo(
-                            empresa,
-                            inicio,
-                            fim
-                    )
-            );
+
+            List<Atendimento> atendimentos= atendimentoRepository.buscarTodosPorPeriodo(empresa, inicio, fim);
+
+            List<AtendimentoResponseDTO> atendimentoData = atendimentos
+                    .stream()
+                    .map(u -> AtendimentoResponseDTO.builder()
+                            .id(u.getId())
+                            .cliente(u.getCliente())
+                            .status(u.getStatus())
+                            .valorTotal(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()).stream().map(AtendimentoServico::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .empresaId(u.getEmpresaId())
+                            .dataCriacao(u.getDataCriacao())
+                            .dataAgendamento(u.getDataAgendamento())
+                            .servicos(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()))
+                            .build())
+                    .toList();
+
+            return ResponseEntity.ok(atendimentoData);
         }
 
-        return ResponseEntity.ok(
-                atendimentoRepository.buscarTodosPorStatusEPeriodo(
-                        empresa,
-                        status,
-                        inicio,
-                        fim
-                )
-        );
+        List<Atendimento> atendimentos= atendimentoRepository.buscarTodosPorStatusEPeriodo(empresa, status, inicio, fim);
+
+        List<AtendimentoResponseDTO> atendimentoData = atendimentos
+                .stream()
+                .map(u -> AtendimentoResponseDTO.builder()
+                        .id(u.getId())
+                        .cliente(u.getCliente())
+                        .status(u.getStatus())
+                        .valorTotal(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()).stream().map(AtendimentoServico::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add))
+                        .empresaId(u.getEmpresaId())
+                        .dataCriacao(u.getDataCriacao())
+                        .dataAgendamento(u.getDataAgendamento())
+                        .servicos(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()))
+                        .build())
+                .toList();
+
+        return ResponseEntity.ok(atendimentoData);
     }
 
     public ResponseEntity<?> alterarStatusAtivo(Integer id, StatusAtendimento status){
