@@ -29,6 +29,7 @@ import java.util.Random;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private UsuarioPreRegistroRepository usuarioPreRegistroRepository;
     private final EmpresaRepository empresaRepository;
     private final PasswordResetTokenRepository tokenRepository;
     private final EmailService emailService;
@@ -137,29 +138,59 @@ public class UsuarioService {
 
     @Transactional
     public ResponseEntity<?> enviarCodigoRecuperacao(String email) {
-        Optional<Usuario> usuarioOpt = repository.findByEmail(email);
-        if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.status(404).body("Usuário não encontrado!");
+
+        Optional<Usuario> usuarioOpt =
+                repository.findByEmail(email);
+
+        Optional<UsuarioPreRegistro> preRegistroOpt =
+                usuarioPreRegistroRepository.findByEmail(email);
+
+        if (usuarioOpt.isEmpty() && preRegistroOpt.isEmpty()) {
+            return ResponseEntity
+                    .status(404)
+                    .body("Usuário não encontrado!");
         }
 
-        // Gera código
+        Integer usuarioId;
+        String emailUsuario;
+        String nomeUsuario;
+
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+
+            usuarioId = usuario.getId();
+            emailUsuario = usuario.getEmail();
+            nomeUsuario = usuario.getNome();
+        } else {
+            UsuarioPreRegistro usuario = preRegistroOpt.get();
+
+            usuarioId = usuario.getId();
+            emailUsuario = usuario.getEmail();
+            nomeUsuario = usuario.getNome();
+        }
+
         String codigo = gerarCodigo();
 
-        // Remove tokens antigos dentro da transação
-        tokenRepository.deleteAllByUsuarioId(usuarioOpt.get().getId());
+        tokenRepository.deleteAllByUsuarioId(usuarioId);
 
-        // Cria novo token
         PasswordResetToken token = PasswordResetToken.builder()
-                .usuarioId(usuarioOpt.get().getId())
-                .email(usuarioOpt.get().getEmail())
+                .usuarioId(usuarioId)
+                .email(emailUsuario)
                 .token(codigo)
                 .expiration(LocalDateTime.now().plusMinutes(10))
                 .build();
+
         tokenRepository.save(token);
 
-        emailService.enviarCodigo(email, codigo, usuarioOpt.get().getNome());
+        emailService.enviarCodigo(
+                emailUsuario,
+                codigo,
+                nomeUsuario
+        );
 
-        return ResponseEntity.ok("Código de validação enviado para o e-mail!");
+        return ResponseEntity.ok(
+                "Código de validação enviado para o e-mail!"
+        );
     }
 
 
