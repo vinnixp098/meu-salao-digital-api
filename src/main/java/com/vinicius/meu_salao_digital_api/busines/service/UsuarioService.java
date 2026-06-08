@@ -29,7 +29,7 @@ import java.util.Random;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
-    private UsuarioPreRegistroRepository usuarioPreRegistroRepository;
+    private final UsuarioPreRegistroRepository usuarioPreRegistroRepository;
     private final EmpresaRepository empresaRepository;
     private final PasswordResetTokenRepository tokenRepository;
     private final EmailService emailService;
