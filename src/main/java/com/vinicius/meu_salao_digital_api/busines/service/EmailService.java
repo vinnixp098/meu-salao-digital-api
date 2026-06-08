@@ -56,7 +56,7 @@ public class EmailService {
         </p>
 
         <p style="font-size: 14px; color: #666;">
-            Caso você não tenha solicitado a redefinição de senha, ignore este e-mail com segurança.
+            Caso você não tenha solicitado o código, ignore este e-mail com segurança.
         </p>
 
         <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
@@ -70,7 +70,7 @@ public class EmailService {
                 .formatted(nome, codigo);
 
         CreateEmailOptions params = CreateEmailOptions.builder()
-                .from("Sistema <onboarding@resend.dev>")
+                .from("Lumien App <onboarding@resend.dev>")
                 .to(email)
                 .subject("Código de vefiricação")
                 .html(html)
