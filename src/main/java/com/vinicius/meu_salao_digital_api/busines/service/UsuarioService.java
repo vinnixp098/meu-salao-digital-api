@@ -157,8 +157,6 @@ public class UsuarioService {
                 .build();
         tokenRepository.save(token);
 
-        // Envia por email
-//        emailService.enviarTeste();
         emailService.enviarCodigo(email, codigo, usuarioOpt.get().getNome());
 
         return ResponseEntity.ok("Código de validação enviado para o e-mail!");
