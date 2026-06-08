@@ -145,7 +145,7 @@ public class UsuarioService {
         Optional<UsuarioPreRegistro> preRegistroOpt =
                 usuarioPreRegistroRepository.findByEmail(email);
 
-        if (usuarioOpt.isEmpty() && preRegistroOpt.isEmpty()) {
+        if (usuarioOpt == null && preRegistroOpt == null ) {
             return ResponseEntity
                     .status(404)
                     .body("Usuário não encontrado!");
@@ -155,7 +155,7 @@ public class UsuarioService {
         String emailUsuario;
         String nomeUsuario;
 
-        if (usuarioOpt.isPresent()) {
+        if (usuarioOpt != null) {
             Usuario usuario = usuarioOpt.get();
 
             usuarioId = usuario.getId();
