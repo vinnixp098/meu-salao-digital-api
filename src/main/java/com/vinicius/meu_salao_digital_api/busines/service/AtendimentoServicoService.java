@@ -70,15 +70,19 @@ public class AtendimentoServicoService {
 
     public ResponseEntity<?> deletar(@Valid Integer id) {
 
-        Optional<AtendimentoServico> atendimentoServico = atendimentoServicoRepository.findById(id);
+        Optional<AtendimentoServico> atendimentoServico =
+                atendimentoServicoRepository.findById(id);
 
-        if(atendimentoServico.get() == null){
+        if (atendimentoServico.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Serviço não encontrado");
         }
 
-        atendimentoServico.get().setDeletado(true);
-        atendimentoServicoRepository.save(atendimentoServico.get());
+        AtendimentoServico servico = atendimentoServico.get();
+
+        servico.setDeletado(true);
+        atendimentoServicoRepository.save(servico);
+
         return ResponseEntity.ok("Serviço deletado com sucesso!");
     }
 
