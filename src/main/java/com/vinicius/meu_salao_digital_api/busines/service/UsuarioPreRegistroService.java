@@ -1,6 +1,7 @@
 package com.vinicius.meu_salao_digital_api.busines.service;
 
 import com.vinicius.meu_salao_digital_api.busines.dto.UsuarioPreRegistroCadastroDTO;
+import com.vinicius.meu_salao_digital_api.busines.entitys.Usuario;
 import com.vinicius.meu_salao_digital_api.busines.entitys.UsuarioPreRegistro;
 import com.vinicius.meu_salao_digital_api.busines.repository.UsuarioPreRegistroRepository;
 import jakarta.validation.Valid;
@@ -41,11 +42,20 @@ public class UsuarioPreRegistroService {
 
     public ResponseEntity<?> buscarUsuarios(@Valid String email){
 
-        if(email != null){
-            return ResponseEntity.ok(usuarioPreRegistroRepository.findByEmailAndDeleted(email, false));
+        Optional<UsuarioPreRegistro> preRegistroOpt =
+                usuarioPreRegistroRepository.findByEmail(email);
+
+        if(email == null){
+            return ResponseEntity.ok(usuarioPreRegistroRepository.findAllByDeleted(false));
         }
 
-        return ResponseEntity.ok(usuarioPreRegistroRepository.findAllByDeleted(false));
+        if (preRegistroOpt == null ) {
+            return ResponseEntity
+                    .status(404)
+                    .body("Usuário não encontrado!");
+        }
+
+        return ResponseEntity.ok().body(preRegistroOpt);
     }
 
     public ResponseEntity<?> deletar(@Valid Integer id) {
