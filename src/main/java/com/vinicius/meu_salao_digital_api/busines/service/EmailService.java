@@ -72,7 +72,7 @@ public class EmailService {
         CreateEmailOptions params = CreateEmailOptions.builder()
                 .from("Lumien App <onboarding@resend.dev>")
                 .to(email)
-                .subject("Código de vefiricação")
+                .subject("Código de verificação")
                 .html(html)
                 .build();
 
