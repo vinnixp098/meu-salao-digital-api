@@ -12,10 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -67,9 +69,16 @@ public class AtendimentoServicoService {
     }
 
     public ResponseEntity<?> deletar(@Valid Integer id) {
-        AtendimentoServico atendimentoServico = atendimentoServicoRepository.findById(id).get();
-        atendimentoServico.setDeletado(true);
-        atendimentoServicoRepository.save(atendimentoServico);
+
+        Optional<AtendimentoServico> atendimentoServico = atendimentoServicoRepository.findById(id);
+
+        if(atendimentoServico == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Serviço não encontrado");
+        }
+
+        atendimentoServico.get().setDeletado(true);
+        atendimentoServicoRepository.save(atendimentoServico.get());
         return ResponseEntity.ok("Serviço deletado com sucesso!");
     }
 
