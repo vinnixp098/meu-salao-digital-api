@@ -87,10 +87,25 @@ public class UsuarioService {
         );
     }
 
-    public ResponseEntity<?> buscarAtivos(Integer empresaId) {
+    public ResponseEntity<?> buscarAtivos(Integer empresaId, String email) {
 
-        if(empresaId != null){
+        if(empresaId != null && email == null){
             List<UsuarioDTO> usuarios = repository.findAllByAtivoAndEmpresaId(true, empresaId);
+            return ResponseEntity.ok().body(usuarios);
+        }
+
+        if(empresaId == null && email != null){
+            List<UsuarioDTO> usuarios = repository.findAllByAtivoAndEmail(true, email)
+                    .stream()
+                    .map(u -> UsuarioDTO.builder()
+                            .id(u.getId())
+                            .nome(u.getNome())
+                            .email(u.getEmail())
+                            .perfil(u.getPerfil())
+                            .empresaId(u.getEmpresaId())
+                            .build())
+                    .toList();
+
             return ResponseEntity.ok().body(usuarios);
         }
 

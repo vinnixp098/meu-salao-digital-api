@@ -30,9 +30,8 @@ public class AtendimentoServicoController {
         return atendimentoServicoService.buscarTodos(empresaId, atendimentoId);
     }
 
-    @PutMapping
+    @PutMapping("/remover-servico")
     public ResponseEntity<?> deletar(@Valid @RequestParam Integer id){
-
         return atendimentoServicoService.deletar(id);
     }
 

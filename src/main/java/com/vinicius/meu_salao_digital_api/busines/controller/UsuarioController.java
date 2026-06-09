@@ -26,8 +26,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/buscar-todos")
-    public ResponseEntity<?> buscarTodos(Integer empresaId){
-        return usuarioService.buscarAtivos(empresaId);
+    public ResponseEntity<?> buscarTodos(Integer empresaId, String email){
+        return usuarioService.buscarAtivos(empresaId, email);
     }
 
     @DeleteMapping("/deletar")

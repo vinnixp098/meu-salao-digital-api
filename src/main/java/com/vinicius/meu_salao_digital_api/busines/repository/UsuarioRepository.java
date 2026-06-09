@@ -5,6 +5,7 @@ import com.vinicius.meu_salao_digital_api.busines.entitys.Usuario;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findAllByAtivo(Boolean ativo);
 
     List<UsuarioDTO> findAllByAtivoAndEmpresaId(boolean b, Integer empresaId);
+
+    List<UsuarioDTO> findAllByAtivoAndEmail(boolean b, String email);
 }
