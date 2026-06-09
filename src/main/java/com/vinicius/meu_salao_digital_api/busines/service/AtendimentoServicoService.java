@@ -72,7 +72,7 @@ public class AtendimentoServicoService {
 
         Optional<AtendimentoServico> atendimentoServico = atendimentoServicoRepository.findById(id);
 
-        if(atendimentoServico == null){
+        if(atendimentoServico.get() == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Serviço não encontrado");
         }
