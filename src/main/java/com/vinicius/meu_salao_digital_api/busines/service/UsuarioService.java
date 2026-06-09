@@ -133,8 +133,13 @@ public class UsuarioService {
 
     public ResponseEntity<?> alterarSenha(String email, String senha) {
         Optional<Usuario> usuarioOpt = repository.findByEmail(email);
+
         if (usuarioOpt.isEmpty()) {
             return ResponseEntity.status(404).body("Usuário não encontrado!");
+        }
+
+        if (senha.isBlank()) {
+            return ResponseEntity.status(400).body("Senha não pode estar em branco.");
         }
 
         Usuario usuario = usuarioOpt.get();
