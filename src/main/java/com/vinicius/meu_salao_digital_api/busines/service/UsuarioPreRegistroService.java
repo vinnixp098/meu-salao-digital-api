@@ -41,20 +41,11 @@ public class UsuarioPreRegistroService {
 
     public ResponseEntity<?> buscarUsuarios(@Valid String email){
 
-        if(email == null){
-            return ResponseEntity.ok(usuarioPreRegistroRepository.findAllByDeleted(false));
+        if(email != null){
+            return ResponseEntity.ok(usuarioPreRegistroRepository.findByEmailAndDeleted(email, false));
         }
 
-        Optional <UsuarioPreRegistro> usuario = usuarioPreRegistroRepository.findByEmailAndDeleted(email, false);
-
-        if(usuario.isPresent()){
-            return ResponseEntity.ok(usuario.get());
-        }
-
-       List <UsuarioPreRegistro> usuarios = usuarioPreRegistroRepository.findAll();
-
-        return ResponseEntity.ok(usuarios);
-
+        return ResponseEntity.ok(usuarioPreRegistroRepository.findAllByDeleted(false));
     }
 
     public ResponseEntity<?> deletar(@Valid Integer id) {
