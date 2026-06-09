@@ -168,19 +168,62 @@ public class AtendimentoService {
 
         if (tipoTempo == TipoFiltroTempo.DIA) {
             List<Atendimento> atendimentos = atendimentoRepository.buscarAtendimentos(empresaId, hoje.atStartOfDay(), hoje.atTime(23, 59,59));
-            ResponseTotalizadoresDTO totalizador = calcularTotalizadores(atendimentos);
+
+            List<AtendimentoResponseDTO> atendimentoData = atendimentos
+                    .stream()
+                    .map(u -> AtendimentoResponseDTO.builder()
+                            .id(u.getId())
+                            .cliente(u.getCliente())
+                            .status(u.getStatus())
+                            .valorTotal(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()).stream().map(AtendimentoServico::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .empresaId(u.getEmpresaId())
+                            .dataCriacao(u.getDataCriacao())
+                            .dataAgendamento(u.getDataAgendamento())
+                            .servicos(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()))
+                            .build())
+                    .toList();
+
+            ResponseTotalizadoresDTO totalizador = calcularTotalizadores(atendimentoData);
             return ResponseEntity.ok(totalizador);
         }
 
         if (tipoTempo == TipoFiltroTempo.SEMANA) {
             List<Atendimento> atendimentos = atendimentoRepository.buscarAtendimentos(empresaId, seteDiasAtras.atStartOfDay(), hoje.atTime(23, 59,59));
-            ResponseTotalizadoresDTO totalizador = calcularTotalizadores(atendimentos);
+            List<AtendimentoResponseDTO> atendimentoData = atendimentos
+                    .stream()
+                    .map(u -> AtendimentoResponseDTO.builder()
+                            .id(u.getId())
+                            .cliente(u.getCliente())
+                            .status(u.getStatus())
+                            .valorTotal(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()).stream().map(AtendimentoServico::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .empresaId(u.getEmpresaId())
+                            .dataCriacao(u.getDataCriacao())
+                            .dataAgendamento(u.getDataAgendamento())
+                            .servicos(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()))
+                            .build())
+                    .toList();
+
+            ResponseTotalizadoresDTO totalizador = calcularTotalizadores(atendimentoData);
             return ResponseEntity.ok(totalizador);
         }
 
         if (tipoTempo == TipoFiltroTempo.MES) {
             List<Atendimento> atendimentos = atendimentoRepository.buscarAtendimentos(empresaId, umMesAtras.atStartOfDay(), hoje.atTime(23, 59,59));
-            ResponseTotalizadoresDTO totalizador = calcularTotalizadores(atendimentos);
+            List<AtendimentoResponseDTO> atendimentoData = atendimentos
+                    .stream()
+                    .map(u -> AtendimentoResponseDTO.builder()
+                            .id(u.getId())
+                            .cliente(u.getCliente())
+                            .status(u.getStatus())
+                            .valorTotal(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()).stream().map(AtendimentoServico::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add))
+                            .empresaId(u.getEmpresaId())
+                            .dataCriacao(u.getDataCriacao())
+                            .dataAgendamento(u.getDataAgendamento())
+                            .servicos(atendimentoServicoRepository.buscarTodosPorEmpresaEAtendimentoId(u.getEmpresaId(), u.getId()))
+                            .build())
+                    .toList();
+
+            ResponseTotalizadoresDTO totalizador = calcularTotalizadores(atendimentoData);
             return ResponseEntity.ok(totalizador);
 
         }
@@ -190,25 +233,31 @@ public class AtendimentoService {
 
     }
 
-    public ResponseTotalizadoresDTO calcularTotalizadores(List<Atendimento> atendimentos){
-        ResponseTotalizadoresDTO response = new ResponseTotalizadoresDTO();
-        response.setAtendimentos(atendimentos.size());
-        response.setEmAndamento(atendimentos.stream().filter(
-                atendimento -> atendimento.getStatus() == StatusAtendimento.EM_ANDAMENTO
-        ).toList().size());
+    public ResponseTotalizadoresDTO calcularTotalizadores(List<AtendimentoResponseDTO> atendimentos) {
 
-        List<Atendimento> atendimentosFinalizados = atendimentos.stream().filter(atendimento -> atendimento.getStatus() == StatusAtendimento.FINALIZADO).toList();
+        ResponseTotalizadoresDTO response = new ResponseTotalizadoresDTO();
+
+        response.setAtendimentos(atendimentos.size());
+
+        response.setEmAndamento(
+                (int) atendimentos.stream()
+                        .filter(a -> a.getStatus() == StatusAtendimento.EM_ANDAMENTO)
+                        .count()
+        );
+
+        List<AtendimentoResponseDTO> atendimentosFinalizados = atendimentos.stream()
+                .filter(a -> a.getStatus() == StatusAtendimento.FINALIZADO)
+                .toList();
 
         response.setFinalizados(atendimentosFinalizados.size());
 
-        response.setFaturamento(
+        BigDecimal faturamento = atendimentosFinalizados.stream()
+                .flatMap(a -> a.getServicos().stream())
+                .map(AtendimentoServico::getValorTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-                atendimentosFinalizados.stream()
-                        .map(Atendimento::getValorTotal)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add)
-        );
+        response.setFaturamento(faturamento);
 
         return response;
-
     }
 }
