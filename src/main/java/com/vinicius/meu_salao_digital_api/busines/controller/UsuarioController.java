@@ -1,9 +1,6 @@
 package com.vinicius.meu_salao_digital_api.busines.controller;
 
-import com.vinicius.meu_salao_digital_api.busines.dto.LoginDTO;
-import com.vinicius.meu_salao_digital_api.busines.dto.PasswordCodeValidationDTO;
-import com.vinicius.meu_salao_digital_api.busines.dto.PasswordRecoveryRequestDTO;
-import com.vinicius.meu_salao_digital_api.busines.dto.UsuarioCadastroDTO;
+import com.vinicius.meu_salao_digital_api.busines.dto.*;
 import com.vinicius.meu_salao_digital_api.busines.service.UsuarioService;
 import com.vinicius.meu_salao_digital_api.busines.entitys.Usuario;
 import jakarta.validation.Valid;
@@ -42,6 +39,11 @@ public class UsuarioController {
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizarUsuarioPorEmail(@RequestParam String email, @RequestBody Usuario usuario) {
         return usuarioService.atualizarUsuarioPorEmail(email, usuario);
+    }
+
+    @PutMapping("/alterar-senha")
+    public ResponseEntity<?> alterarSenha(@RequestBody AlterarSenhaDTO usuario) {
+        return usuarioService.alterarSenha(usuario.getEmail(), usuario.getSenha());
     }
 
     @PostMapping("/enviar-codigo")

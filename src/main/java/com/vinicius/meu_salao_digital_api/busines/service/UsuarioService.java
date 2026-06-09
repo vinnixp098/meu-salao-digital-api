@@ -131,6 +131,21 @@ public class UsuarioService {
         return ResponseEntity.ok("Usuário atualizado com sucesso!");
     }
 
+    public ResponseEntity<?> alterarSenha(String email, String senha) {
+        Optional<Usuario> usuarioOpt = repository.findByEmail(email);
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("Usuário não encontrado!");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        if (senha != null)
+            usuario.setSenha(passwordEncoder.encode(senha));
+
+        repository.save(usuario);
+        return ResponseEntity.ok("Senha alterada com sucesso!");
+    }
+
     private String gerarCodigo() {
         return String.format("%06d", new Random().nextInt(999999));
     }
