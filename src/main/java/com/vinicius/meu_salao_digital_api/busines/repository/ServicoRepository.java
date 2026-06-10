@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface ServicoRepository extends JpaRepository<Servico, Integer> {
 
-  List<Servico> findAllByEmpresaId(Integer empresa);
 
    List<Servico> findAllByEmpresaIdAndDescricao(@NotNull(message = "Id da empresa é obrigatória") Integer empresaId, String descricao);
+
+   List<Servico> findAllByEmpresaIdAndAtivo(Integer empresa, Boolean ativo);
 }

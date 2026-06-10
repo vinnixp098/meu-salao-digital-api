@@ -45,7 +45,7 @@ public class ServicoService {
     }
 
     public ResponseEntity<?> buscarTodos(Integer empresa){
-        return ResponseEntity.ok(servicoRepository.findAllByEmpresaId(empresa));
+        return ResponseEntity.ok(servicoRepository.findAllByEmpresaIdAndAtivo(empresa, true));
     }
 
     public ResponseEntity<?> alterarStatusAtivo(Integer id){
