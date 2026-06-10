@@ -69,4 +69,13 @@ public class ServicoService {
     }
 
 
+    public ResponseEntity<?> editar(@Valid Servico servico) {
+        Servico servicoData = servicoRepository.findById(servico.getId()).get();
+        servicoData.setValor_promocao(servico.getValor_promocao());
+        servicoData.setPromocao_ativo(servico.getPromocao_ativo());
+        servicoData.setValor(servico.getValor());
+        servicoData.setAtivo(servico.getAtivo());
+        servicoRepository.save(servicoData);
+        return ResponseEntity.ok("Dados do serviço alterados com sucesso!");
+    }
 }

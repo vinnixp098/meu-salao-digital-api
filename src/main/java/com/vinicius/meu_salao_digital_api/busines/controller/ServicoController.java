@@ -1,6 +1,7 @@
 package com.vinicius.meu_salao_digital_api.busines.controller;
 
 import com.vinicius.meu_salao_digital_api.busines.dto.*;
+import com.vinicius.meu_salao_digital_api.busines.entitys.Servico;
 import com.vinicius.meu_salao_digital_api.busines.service.EmpresaService;
 import com.vinicius.meu_salao_digital_api.busines.service.ServicoService;
 import com.vinicius.meu_salao_digital_api.busines.service.UsuarioService;
@@ -32,6 +33,11 @@ public class ServicoController {
     @PutMapping("/alterar-status")
     public ResponseEntity<?> alterarStatus(@Valid @RequestParam Integer servicoId){
         return servicoService.alterarStatusAtivo(servicoId);
+    }
+
+    @PutMapping("/editar")
+    public ResponseEntity<?> alterarStatus(@Valid @RequestBody Servico servico){
+        return servicoService.editar(servico);
     }
 
     @PutMapping("/alterar-status-promocao")
