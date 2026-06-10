@@ -36,7 +36,7 @@ public class ServicoService {
                 .valor_promocao(servico.getValor_promocao())
                 .empresaId(servico.getEmpresa_id())
                 .ativo(true)
-                .promocao_ativo(false)
+                .promocao_ativo(servico.getPromocao_ativo())
                 .build();
 
         servicoRepository.save(servicoData);

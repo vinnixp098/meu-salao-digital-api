@@ -20,4 +20,6 @@ public class ServicoCadastroDTO {
 
     @NotNull(message = "Id da empresa é obrigatória")
     private Integer empresa_id;
+
+    private Boolean promocao_ativo;
 }
