@@ -16,6 +16,8 @@ public class AtendimentoResponseDTO {
 
     private String cliente;
 
+    private String telefone;
+
     private Integer empresaId;
 
     private LocalDateTime dataCriacao;

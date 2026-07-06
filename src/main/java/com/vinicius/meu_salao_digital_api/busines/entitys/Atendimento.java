@@ -23,6 +23,8 @@ public class Atendimento {
 
     private String cliente;
 
+    private String telefone;
+
     @Column(name = "empresa_id")
     private Integer empresaId;
 

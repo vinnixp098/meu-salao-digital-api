@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @Builder
 public class AtendimentoCadastroDTO {
 
-
     private String cliente;
+
+    private String telefone;
 
     @Column(name = "empresa_id")
     private Integer empresaId;
