@@ -24,8 +24,8 @@ public class EmpresaController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<?> buscar(String document){
-        return empresaService.buscarEmpresas(document);
+    public ResponseEntity<?> buscar(Integer empresaId){
+        return empresaService.buscarEmpresas(empresaId);
     }
 
     @DeleteMapping

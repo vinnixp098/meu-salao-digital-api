@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 public class EmpresaService {
@@ -33,12 +35,12 @@ public class EmpresaService {
         return ResponseEntity.ok("Empresa cadastrada com sucesso!");
     }
 
-    public ResponseEntity<?> buscarEmpresas(@Valid String document){
+    public ResponseEntity<?> buscarEmpresas(@Valid Integer empresaId){
 
-        if(document == null){
+        if(empresaId == null){
             return ResponseEntity.ok(empresaRepository.findAllByDeleted(false));
         }
-        return ResponseEntity.ok(empresaRepository.findAllByDocument(document));
+        return ResponseEntity.ok(empresaRepository.findAllById(Collections.singleton(empresaId)));
     }
 
     public ResponseEntity<?> deletar(@Valid Integer id){
